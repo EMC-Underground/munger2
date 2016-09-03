@@ -1,8 +1,8 @@
 ---
 applications:
-- name: munger4
+- name: munger2
   memory: 1G
   disk_quota: 500MB
   domain: bellevuelab.isus.emc.com
   no-route: true
-  command: node munger4.js
+  command: node munger2.js
