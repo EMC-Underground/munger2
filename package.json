@@ -1,7 +1,7 @@
 {
   "name": "munger2",
   "version": "1.0.0",
-  "description": "Node microservice to pull in install base data, obtain an insight and then post that insight in simple lightweight JSON",
+  "description": "Node microservice to pull in SR data, obtain an insight and then post that insight in simple lightweight JSON",
   "main": "munger2.js",
   "dependencies": {
     "aws-sdk": "^2.3.17",
