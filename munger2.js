@@ -111,10 +111,10 @@ function cycleThru() {
 
     ], function(err) {
 		//restart the whole cycle again from the top after wait time
-		//setTimeout(function() {
-			//console.log('in cycleThru');
-			//cycleThru();
-		//}, 86400000); // 86400000 = loop through 1 every 24 hours
+		setTimeout(function() {
+			console.log('in cycleThru');
+			cycleThru();
+		}, 86400000); // 86400000 = loop through 1 every 24 hours
     });
 }
 
