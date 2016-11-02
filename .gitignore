@@ -35,6 +35,8 @@ node_modules
 config.json
 AWSconfig.json
 ECSconfig.json
+local-vcap.json
+
 
 
 

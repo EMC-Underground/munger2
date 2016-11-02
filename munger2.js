@@ -59,25 +59,41 @@ function getThingToCountList() {
 
 var AWS = require( "aws-sdk" ),
 	ECS = require( "aws-sdk" ),
+	cfenv = require("cfenv"),
 	async = require( "async" );
 
-// setup ECS config to point to Bellevue lab
+// try and set the vcap from a local file, if it fails, appEnv will be set to use
+// the PCF user provided service specified with the getServiceCreds call
+var localVCAP  = null	
+try {
+	localVCAP = require("./local-vcap.json")
+	} catch(e) {}
+	
+var appEnv = cfenv.getAppEnv({vcap: localVCAP}) // vcap specification is ignored if not running locally
+var AWScreds  = appEnv.getServiceCreds('aws-creds-service') || {}
+var ECScreds  = appEnv.getServiceCreds('ecs-creds-service') || {}
+
+var AWSconfig = {
+  region: AWScreds.region,
+  accessKeyId: AWScreds.accessKeyId,
+  secretAccessKey: AWScreds.secretAccessKey
+};
+var s3 = new AWS.S3(AWSconfig);
+
+// setup ECS config to point to Bellevue lab 
 var ECSconfig = {
   s3ForcePathStyle: true,
-  endpoint: new AWS.Endpoint('http://10.4.44.125:9020')
+  endpoint: new AWS.Endpoint('http://10.5.208.212:9020'), // store to node 1 of 4 node cluster
+  accessKeyId: ECScreds.accessKeyId,
+  secretAccessKey: ECScreds.secretAccessKey
 };
-ECS.config.loadFromPath(__dirname + '/ECSconfig.json');
 var ecs = new ECS.S3(ECSconfig);
 
-var ecsBucket = 'testSRS',
+var ecsBucket = 'serviceRequests',
 	awsBucket = 'munger-insights-srs';
 
-// setup s3 config
-AWS.config.loadFromPath(__dirname + '/AWSconfig.json');
-var s3 = new AWS.S3();
-
-// launch the Munger1 process
-console.log('starting cycleThru...');
+// launch the Munger2 process
+console.log('starting Munger2 cycleThru...');
 cycleThru();
 
 // This is the master function that calls the 2 supporting functions in series to
@@ -109,12 +125,19 @@ function cycleThru() {
             });
         }
 
-    ], function(err) {
+    ], function(err) {	
+		if (err) {
+			console.log('Full cycle likely not complete, error: ' + err);
+		} else {
+			console.log('Full cycle completed successfully');
+		}
+		var datetime = new Date();
+		console.log('Cycle ended on: ' + datetime);	
+		console.log('now waiting 24 hrs before starting cycle again...');
 		//restart the whole cycle again from the top after wait time
 		setTimeout(function() {
-			console.log('in cycleThru');
 			cycleThru();
-		}, 86400000); // 86400000 = loop through 1 every 24 hours
+		}, 86400000); // 86400000 = loop through 1 every 24 hours			
     });
 }
 

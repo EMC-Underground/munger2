@@ -1,11 +1,12 @@
 {
   "name": "munger2",
   "version": "1.0.0",
-  "description": "Node microservice to pull in SR data, obtain an insight and then post that insight in simple lightweight JSON",
+  "description": "Node microservice to pull SR data, obtain an insight and then post that insight in simple lightweight JSON",
   "main": "munger2.js",
   "dependencies": {
-    "aws-sdk": "^2.3.17",
-    "async": "^2.0.0-rc.6"
+    "cfenv": "^1.0.3",
+    "async": "^2.0.0-rc.6",
+    "aws-sdk": "^2.3.17"
   },
   "devDependencies": {},
   "scripts": {
@@ -15,7 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/EMC-Underground/munger2.git"
   },
-  "author": "Dana Young",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/EMC-Underground/munger2/issues"
